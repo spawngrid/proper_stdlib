@@ -2,6 +2,10 @@
 -include_lib("proper/include/proper.hrl").
 -compile(export_all).
 
+unique(List) ->
+    ?SUCHTHAT(L, List,
+              length(lists:usort(L)) =:= length(L)).
+
 lowercase_latin_char() ->
     integer(97,122).
 

@@ -3,6 +3,10 @@
 -include_lib("eunit/include/eunit.hrl").
 
 %% properties
+prop_unique() ->
+    ?FORALL(List, proper_stdgen:unique(non_empty(list(any()))),
+            length(lists:usort(List)) =:= length(List)).
+
 prop_lowercase_latin_char() ->
     ?FORALL(Char, proper_stdgen:lowercase_latin_char(),
             string:to_lower([Char]) =:= [Char]).
