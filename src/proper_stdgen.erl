@@ -38,8 +38,5 @@ posix_filepath() ->
          string:join(Path, "/")).
 
 posix_abs_filepath() ->
-    oneof([?LET(Path, non_empty(list(posix_filename())),
-                filename:absname("/" ++ string:join(Path, "/"))),
-           "/"]).
-
+    frequency([{10, "/"++posix_filepath()}, {1, "/"}]).
 
