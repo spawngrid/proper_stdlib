@@ -27,7 +27,8 @@ posix_filepath() ->
          string:join(Path, "/")).
 
 posix_abs_filepath() ->
-    ?LET(Path, non_empty(list(posix_filename())),
-         filename:absname("/" ++ string:join(Path, "/"))).
+    oneof([?LET(Path, non_empty(list(posix_filename())),
+                filename:absname("/" ++ string:join(Path, "/"))),
+           "/"]).
 
 
