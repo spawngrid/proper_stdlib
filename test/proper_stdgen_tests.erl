@@ -19,8 +19,12 @@ prop_number_char() ->
     ?FORALL(Char, proper_stdgen:number_char(),
             integer_to_list(list_to_integer([Char])) =:= [Char]).
 
+prop_binary_bytestring() ->
+    ?FORALL(String, proper_stdgen:bytestring(),
+            binary_to_list(list_to_binary(String)) =:= String).
+
 prop_binary_string_string() ->
-    ?FORALL(String, proper_stdgen:binary_string(list(byte())),
+    ?FORALL(String, proper_stdgen:binary_string(proper_stdgen:bytestring()),
             is_binary(String)).
 
 prop_binary_string_binary() ->

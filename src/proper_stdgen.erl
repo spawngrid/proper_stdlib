@@ -14,6 +14,9 @@ latin_char() ->
 number_char() ->
     integer(48,57).
 
+bytestring() ->
+    list(byte()).
+
 binary_string(IO) ->
     ?LET(Io, IO,
          iolist_to_binary(Io)).
