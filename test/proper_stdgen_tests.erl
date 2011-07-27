@@ -19,6 +19,18 @@ prop_number_char() ->
     ?FORALL(Char, proper_stdgen:number_char(),
             integer_to_list(list_to_integer([Char])) =:= [Char]).
 
+prop_posix_filename() ->
+    ?FORALL(Filename, proper_stdgen:posix_filename(),
+            lists:member($/,Filename) =:= false).
+
+prop_posix_abs_filepath() ->
+    ?FORALL(Filepath, proper_stdgen:posix_abs_filepath(),
+            begin
+                [H|_] = Filepath,
+                H =:= $/
+            end).
+    
+
 %% eunit helpers
 t_properties() ->
     ?assertEqual([], 
