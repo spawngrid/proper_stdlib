@@ -14,6 +14,10 @@ latin_char() ->
 number_char() ->
     integer(48,57).
 
+binary_string(IO) ->
+    ?LET(Io, IO,
+         iolist_to_binary(Io)).
+
 posix_filename() ->
     non_empty(list(frequency([
                               {10, latin_char()},

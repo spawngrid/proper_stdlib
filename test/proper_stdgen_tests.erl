@@ -19,6 +19,14 @@ prop_number_char() ->
     ?FORALL(Char, proper_stdgen:number_char(),
             integer_to_list(list_to_integer([Char])) =:= [Char]).
 
+prop_binary_string_string() ->
+    ?FORALL(String, proper_stdgen:binary_string(list(byte())),
+            is_binary(String)).
+
+prop_binary_string_binary() ->
+    ?FORALL(String, proper_stdgen:binary_string(bitstring(8)),
+            is_binary(String)).
+
 prop_posix_filename() ->
     ?FORALL(Filename, proper_stdgen:posix_filename(),
             lists:member($/,Filename) =:= false).
