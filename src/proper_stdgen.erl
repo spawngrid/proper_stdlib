@@ -15,6 +15,10 @@ uppercase_latin_char() ->
 latin_char() ->
     oneof([lowercase_latin_char(), uppercase_latin_char()]).
 
+utf8_char() ->
+    ?LET(Byte, byte(),
+         binary_to_list(unicode:characters_to_binary([Byte]))).
+
 number_char() ->
     integer(48,57).
 
