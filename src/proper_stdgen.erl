@@ -132,6 +132,8 @@ email_domain() ->
                ]).
 
 email() ->
-    ?LET({LocalPart, Domain}, {email_local_part(), email_domain()},
-         string:join([LocalPart, Domain], "@")).
+    ?SUCHTHAT(Email,
+              ?LET({LocalPart, Domain}, {email_local_part(), email_domain()},
+                   string:join([LocalPart, Domain], "@")),
+              length(Email) < 255).
 
