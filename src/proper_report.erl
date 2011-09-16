@@ -38,6 +38,10 @@ report(Cmds, History, FinalState, Result, Fun) ->
     Sequence = [ translate(VarsPLst, Cmd) || Cmd <- Cmds],
     Fun("~n---Command sequence:~n~s~n", [string:join(Sequence,"\n")]),
     Fun("~n---States and results:~n", []),
+    AdjustedSequence = lists:reverse(
+                         lists:nthtail(length(Sequence) + 1 -
+                                       length(FullHistory),
+                                       lists:reverse(["init"|Sequence]))),
     [Fun("Command:~n~s~n"
          "Result:~n~s~n"
          "State was:~n~s~n"
@@ -47,7 +51,8 @@ report(Cmds, History, FinalState, Result, Fun) ->
            io_lib_pretty:print(Res, 1, 80, -1),
            io_lib_pretty:print(State, 1, 80, -1)
          ])
-       || {{Res, State}, Command} <- lists:zip(FullHistory, ["none"|Sequence]) ].
+       || {{Res, State}, Command} <- lists:zip(FullHistory, 
+                                               AdjustedSequence) ].
 
 find_reused(Cmds) ->
     find_reused(Cmds, []).
