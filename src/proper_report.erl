@@ -99,7 +99,7 @@ translate_arg(VarsDict, X) when is_list(X) ->
     if
       X == [] -> "[]";
       PL -> lists:flatten(io_lib:format("~p",[X]));
-      PUL -> lists:flatten(io_lib:format("~tp",[X]));
+      PUL -> lists:flatten(io_lib:format("~p",[X]));
       true -> "[" ++ translate_args(VarsDict, X) ++ "]"
     end;
 translate_arg(VarsDict, X) when is_tuple(X) ->
