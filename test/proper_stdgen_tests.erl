@@ -45,7 +45,24 @@ prop_posix_abs_filepath() ->
                 [H|_] = Filepath,
                 H =:= $/
             end).
-    
+
+prop_utf8() ->
+    ?FORALL(S, oneof([proper_stdgen:utf8_string(), proper_stdgen:utf8_bin()]),
+        unicode:characters_to_binary(S, utf8, utf8) =:= S
+        orelse
+        unicode:characters_to_list(S, utf8) =:= S).
+
+prop_utf16() ->
+    ?FORALL(S, oneof([proper_stdgen:utf16_string(), proper_stdgen:utf16_bin()]),
+        unicode:characters_to_binary(S, utf16, utf16) =:= S
+        orelse
+        unicode:characters_to_list(S, utf16) =:= S).
+
+prop_utf32() ->
+    ?FORALL(S, oneof([proper_stdgen:utf32_string(), proper_stdgen:utf32_bin()]),
+        unicode:characters_to_binary(S, utf32, utf32) =:= S
+        orelse
+        unicode:characters_to_list(S, utf32) =:= S).
 
 %% eunit helpers
 t_properties() ->
