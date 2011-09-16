@@ -7,10 +7,10 @@ unique(List) ->
               length(lists:usort(L)) =:= length(L)).
 
 lowercase_latin_char() ->
-    integer(97,122).
+    integer($a, $z).
 
 uppercase_latin_char() ->
-    integer(65,90).
+    integer($A, $Z).
 
 latin_char() ->
     oneof([lowercase_latin_char(), uppercase_latin_char()]).
@@ -20,7 +20,7 @@ utf8_char() ->
          binary_to_list(unicode:characters_to_binary([Byte]))).
 
 number_char() ->
-    integer(48,57).
+    integer($0, $9).
 
 bytestring() ->
     list(byte()).
@@ -45,21 +45,12 @@ posix_abs_filepath() ->
     frequency([{10, "/"++posix_filepath()}, {1, "/"}]).
 
 local_part_non_special_char() ->
-    oneof([
-           integer(65,90), %% a-z
-           integer(97,122), %% A-Z
-           integer(48,57), %% 0-9
-           %% !#$%&'*+-/=?^_`{|}~
-           33,
-           integer(35,39),
-           42,
-           43,
-           45,
-           47,
-           61,
-           63,
-           integer(94,96),
-           integer(123,126)]).
+    oneof([latin_char(),
+           number_char(),
+           $!, $#, $$, $%, $&, $',
+           $*, $+, $-, $/, $=, $?,
+           $^, $_, $`, ${, $|, $},
+           $~]).
 
 local_part_slash_special_char() ->
     [$\\, oneof([32, 92, 34])].
@@ -68,7 +59,7 @@ local_part_special_char() ->
     %% (),:;<>@[]
     oneof([
            local_part_slash_special_char(),
-           40, 41, 44, 58, 59, 60, 62, 64, 91, 93
+           $(, $), $,, $:, $;, $<, $>, $@, $[, $]
           ]).
 
 local_part_maybe_special_char_list() ->
@@ -105,10 +96,8 @@ email_local_part() ->
 
 label() ->
     ?SUCHTHAT(Label,
-              non_empty(list(oneof([
-                                    integer(65,90), %% a-z
-                                    integer(97,122), %% A-Z
-                                    integer(48,57), %% 0-9,
+              non_empty(list(oneof([latin_char(),
+                                    number_char(),
                                     $-]))),
               ((string:chr(Label, $-) > 1 andalso
                 string:rchr(Label, $-) < length(Label)) orelse
