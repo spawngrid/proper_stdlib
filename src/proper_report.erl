@@ -1,5 +1,5 @@
 -module(proper_report).
--export([report/4]).
+-export([report/4, report_ct/4, report/5]).
 -define(NAMES,
         ["MARY", "PATRICIA", "LINDA", "BARBARA", "ELIZABETH", "JENNIFER",
          "MARIA", "SUSAN", "MARGARET","DOROTHY", "LISA", "NANCY", "KAREN",
@@ -17,9 +17,14 @@
          "TINA", "PHYLLIS", "NORMA","PAULA","DIANA","ANNIE", "LILLIAN", "EMILY",
          "ROBIN"]).
 
-report([{init, _InitialState}|Cmds], History, FinalState, Result) ->
-   report(Cmds, History, FinalState, Result);
 report(Cmds, History, FinalState, Result) ->
+  report(Cmds, History, FinalState, Result, fun (Format, Data) -> io:format(user, Format, Data) end).
+report_ct(Cmds, History, FinalState, Result) ->
+  report(Cmds, History, FinalState, Result, fun (Format, Data) -> ct:pal(Format, Data) end).
+
+report([{init, _InitialState}|Cmds], History, FinalState, Result, Fun) ->
+   report(Cmds, History, FinalState, Result, Fun);
+report(Cmds, History, FinalState, Result, Fun) ->
     Vars = lists:sort(find_reused(Cmds)),
     VarsArray = lists:foldl(
                   fun(X, A) -> array:set(X, array:get(X, A) + 1, A) end,
@@ -29,10 +34,10 @@ report(Cmds, History, FinalState, Result) ->
     Results = [init|[R || {_S, R} <- History]],
     FullHistory = lists:zip(Results, States),
 
-    io:format(user, "~n---Result:~n~p~n", [Result]),
-    io:format(user, "~n---Command sequence:~n", []),
-    [io:format(user, "~s~n", [translate(VarsPLst, Cmd)]) || Cmd <- Cmds],
-    io:format(user, "~n---States and results:~n", []),
+    Fun("~n---Result:~n~p~n", [Result]),
+    Fun("~n---Command sequence:~n", []),
+    [Fun("~s~n", [translate(VarsPLst, Cmd)]) || Cmd <- Cmds],
+    Fun("~n---States and results:~n", []),
     [io:format(user,
                "Result:~n~s~n"
                "State was:~n~s~n"
