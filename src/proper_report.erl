@@ -18,6 +18,8 @@
          "ROBIN"]).
 
 report([{init, _InitialState}|Cmds], History, FinalState, Result) ->
+   report(Cmds, History, FinalState, Result);
+report(Cmds, History, FinalState, Result) ->
     Vars = lists:sort(find_reused(Cmds)),
     VarsArray = lists:foldl(
                   fun(X, A) -> array:set(X, array:get(X, A) + 1, A) end,
