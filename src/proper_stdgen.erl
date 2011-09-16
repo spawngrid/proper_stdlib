@@ -15,10 +15,6 @@ uppercase_latin_char() ->
 latin_char() ->
     oneof([lowercase_latin_char(), uppercase_latin_char()]).
 
-utf8_char() ->
-    ?LET(Byte, byte(),
-         binary_to_list(unicode:characters_to_binary([Byte]))).
-
 number_char() ->
     integer($0, $9).
 
@@ -128,4 +124,26 @@ email() ->
               ?LET({LocalPart, Domain}, {email_local_part(), email_domain()},
                    string:join([LocalPart, Domain], "@")),
               length(Email) < 255).
+
+unicode_char() ->
+    ?SUCHTHAT(C, char(), C < 16#D800 orelse C > 16#DFFF).
+
+utf8_char() -> unicode_char().
+utf16_char() -> unicode_char().
+utf32_char() -> unicode_char().
+
+utf8_string() -> unicode_string().
+utf16_string() -> unicode_string().
+utf32_string() -> unicode_string().
+
+utf8_bin() -> unicode_bin(utf8).
+utf16_bin() -> unicode_bin(utf16).
+utf32_bin() -> unicode_bin(utf32).
+
+unicode_string() ->
+    ?LET(S, list(unicode_char()), unicode:characters_to_list(S, unicode)).
+
+unicode_bin(OutEncoding) ->
+    ?LET(S, list(unicode_char()),
+         unicode:characters_to_binary(S, unicode, OutEncoding)).
 
