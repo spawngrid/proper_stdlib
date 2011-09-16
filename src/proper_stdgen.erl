@@ -49,16 +49,16 @@ local_part_non_special_char() ->
            integer(65,90), %% a-z
            integer(97,122), %% A-Z
            integer(48,57), %% 0-9
-           %% !#$%&'*+-/=?^_`{|}~ 
-           33, 
-           integer(35,39), 
-           42, 
-           43, 
-           45, 
-           47, 
-           61, 
-           63, 
-           integer(94,96), 
+           %% !#$%&'*+-/=?^_`{|}~
+           33,
+           integer(35,39),
+           42,
+           43,
+           45,
+           47,
+           61,
+           63,
+           integer(94,96),
            integer(123,126)]).
 
 local_part_slash_special_char() ->
@@ -80,7 +80,7 @@ local_part_maybe_special_char_list() ->
                     )), $"].
 
 email_local_part() ->
-    ?LET(LocalPart, 
+    ?LET(LocalPart,
          ?SUCHTHAT(LocalPart,
                    frequency([{100,
                                non_empty(list(
@@ -89,7 +89,7 @@ email_local_part() ->
                                                       {2, $.},
                                                       {1, [$., local_part_maybe_special_char_list(), $.]}
                                                      ])))},
-                              {1, 
+                              {1,
                                local_part_maybe_special_char_list()}]),
                    %% rules for dots
                    begin
@@ -101,7 +101,7 @@ email_local_part() ->
                            string:str(LocalPartF, "..") =:= 0
                    end),
          lists:flatten(LocalPart)).
-                  
+
 
 label() ->
     ?SUCHTHAT(Label,
@@ -122,7 +122,7 @@ email_domain() ->
                                non_empty(list(label())),
                                string:join(Labels, ".")),
                           length(Hostname) < 256)},
-               {1, 
+               {1,
                 ?LET({A,B,C,D}, {integer(0,255),integer(0,255),integer(0,255),integer(0,255)},
                      "[" ++ string:join([integer_to_list(A),
                                          integer_to_list(B),
