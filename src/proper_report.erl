@@ -38,12 +38,11 @@ report(Cmds, History, FinalState, Result, Fun) ->
     Sequence = string:join([ translate(VarsPLst, Cmd) || Cmd <- Cmds], "\n"),
     Fun("~n---Command sequence:~n~s~n", [Sequence]),
     Fun("~n---States and results:~n", []),
-    [io:format(user,
-               "Result:~n~s~n"
-               "State was:~n~s~n"
-               "--------------------~n",
-               [io_lib_pretty:print(Res, 1, 80, 10),
-                io_lib_pretty:print(State, 1, 80, 10)])
+    [Fun("Result:~n~s~n"
+         "State was:~n~s~n"
+         "--------------------~n",
+         [io_lib_pretty:print(Res, 1, 80, 10),
+           io_lib_pretty:print(State, 1, 80, 10)])
      || {Res, State} <- FullHistory].
 
 find_reused(Cmds) ->
