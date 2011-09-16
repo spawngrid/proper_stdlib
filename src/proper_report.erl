@@ -35,8 +35,8 @@ report(Cmds, History, FinalState, Result, Fun) ->
     FullHistory = lists:zip(Results, States),
 
     Fun("~n---Result:~n~p~n", [Result]),
-    Fun("~n---Command sequence:~n", []),
-    [Fun("~s~n", [translate(VarsPLst, Cmd)]) || Cmd <- Cmds],
+    Sequence = string:join([ translate(VarsPLst, Cmd) || Cmd <- Cmds], "\n"),
+    Fun("~n---Command sequence:~n~s~n", [Sequence]),
     Fun("~n---States and results:~n", []),
     [io:format(user,
                "Result:~n~s~n"
