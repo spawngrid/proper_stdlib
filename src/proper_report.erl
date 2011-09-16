@@ -89,7 +89,14 @@ translate_arg(VarsDict, {var, VarN}) ->
         {_, Name} -> io_lib:format("~s#~B", [Name, VarN])
     end;
 translate_arg(VarsDict, X) when is_list(X) ->
-    "[" ++ translate_args(VarsDict, X) ++ "]";
+    PL = io_lib:printable_list(X),
+    PUL = io_lib:printable_unicode_list(X),
+    if
+      X == [] -> "[]";
+      PL -> lists:flatten(io_lib:format("~p",[X]));
+      PUL -> lists:flatten(io_lib:format("~tp",[X]));
+      true -> "[" ++ translate_args(VarsDict, X) ++ "]"
+    end;
 translate_arg(VarsDict, X) when is_tuple(X) ->
     "{" ++ translate_args(VarsDict, tuple_to_list(X)) ++ "}";
 translate_arg(_VarsDict, X) -> io_lib:format("~p", [X]).
