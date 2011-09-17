@@ -16,10 +16,15 @@ parse_transform(Forms, _Options) ->
 	Clauses ++
 	tc_clauses(Properties).
 
+tc_output([C], []) when is_integer(C) ->
+   io:format(user, [C], []);
+tc_output(Format, Data) ->
+   ct:log(Format, Data),
+   io:format(user, Format, Data).
+
 tc_proper(Prop, Config) ->
-   Output = fun (Format, Data) -> io:format(user, Format, Data) end,
 	 Options = proplists:get_value(proper, Config, []),
-   true = proper:quickcheck(Prop, Options ++ [{on_output, Output}]).
+   true = proper:quickcheck(Prop, Options ++ [{on_output, fun tc_output/2}]).
 
 testcases(Module) ->
 	 [ list_to_atom("tc_" ++ atom_to_list(Name)) || Name <- proper_util:exported_properties(Module) ].
