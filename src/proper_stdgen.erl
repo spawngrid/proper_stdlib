@@ -11,6 +11,7 @@ subset([]) ->
 subset(List) ->
     ?LET(Indices, unique(list(integer(1, length(List)))),
         [ lists:nth(Index, List) || Index <- Indices ]).
+
 lowercase_latin_char() ->
     integer($a, $z).
 
