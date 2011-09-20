@@ -7,6 +7,11 @@ prop_unique() ->
     ?FORALL(List, proper_stdgen:unique(non_empty(list(any()))),
             length(lists:usort(List)) =:= length(List)).
 
+prop_subset() ->
+    ?FORALL(List, list(),
+      ?FORALL(Subset, proper_stdgen:subset(List),
+        lists:all(fun (E) -> lists:member(E, List) end, Subset))).
+
 prop_lowercase_latin_char() ->
     ?FORALL(Char, proper_stdgen:lowercase_latin_char(),
             string:to_lower([Char]) =:= [Char]).
@@ -74,7 +79,7 @@ t_properties() ->
                                                    Format, Data)
                                  end}, {numtests, 100}])).
 
-sgrid_yang_module_test_() ->
+proper_stdgen_module_test_() ->
    [
     {timeout, 30, {"PropEr tests", ?_test(t_properties())}}
    ].
