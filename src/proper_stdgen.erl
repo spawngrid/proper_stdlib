@@ -8,6 +8,9 @@ unique(List) ->
 
 subset([]) ->
     [];
+subset({'$type', _} = List) ->
+    ?LET(L, List,
+         subset(L));
 subset(List) ->
     ?LET(Indices, unique(list(integer(1, length(List)))),
         [ lists:nth(Index, List) || Index <- Indices ]).
