@@ -108,14 +108,16 @@ label() ->
                 string:rchr(Label, $-) < length(Label)) orelse
                string:chr(Label, $-) =:= 0) andalso
               length(Label) < 64).
-
+hostname() ->
+  ?SUCHTHAT(Hostname,
+    ?LET(Labels,
+      non_empty(list(label())),
+      string:join(Labels, ".")),
+    length(Hostname) < 256).
+ 
 email_domain() ->
     frequency([{20,
-                ?SUCHTHAT(Hostname,
-                          ?LET(Labels,
-                               non_empty(list(label())),
-                               string:join(Labels, ".")),
-                          length(Hostname) < 256)},
+                hostname()},
                {1,
                 ?LET({A,B,C,D}, {integer(0,255),
                                  integer(0,255),
